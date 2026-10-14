@@ -209,6 +209,59 @@ FOOTER = f"""<footer class="site-footer">
 # ---------------------------------------------------------------- ARTICLES
 ARTICLES = [
     {
+        "slug": "winter-interior-remodel-projects",
+        "tag": "Planning",
+        "title": "Winter Remodeling: The Indoor Projects That Make Sense Now, and What to Plan for Spring",
+        "card_title": "Winter remodeling: what to build indoors now and what to plan for spring",
+        "desc": "Why winter works well for kitchens, bathrooms, basements and other interior remodels, which projects are better designed now and built in spring, and how to live comfortably in the house while the work happens. From a Class A licensed design-build contractor serving Northern Virginia, DC and Richmond.",
+        "card_desc": "The interior projects that work well in winter, the outdoor ones to design now and build in spring, and how to live in the house during the work.",
+        "hero": "/assets/img/kitchen-thomas-jefferson.jpg",
+        "hero_alt": "White kitchen with a farmhouse sink, brass hardware and French doors to the patio remodeled by DFC Home Improvement",
+        "date": "2026-10-14",
+        "date_disp": "October 2026",
+        "body": """
+    <p>Most people think of remodeling as a spring and summer thing. The yard is green, the windows are open, and that is when the idea of a new kitchen feels most urgent. But a kitchen does not care what the weather is doing outside. Neither does a bathroom, a basement or a floor. For interior work, the colder months are some of the most practical of the year, and they are also the best time to get the design side of an outdoor project finished so it is ready to build when the ground thaws.</p>
+
+    <h2>Why interior work fits the winter</h2>
+    <ul>
+      <li><strong>The weather stays outside.</strong> Once the work is inside the walls, rain and cold do not stop a crew the way they stop a deck or a roof. The schedule depends on decisions, materials and inspections, not the forecast.</li>
+      <li><strong>You are home to make decisions.</strong> Selections and design questions move faster when you are around, and winter is when most families have the fewest weekends booked at the pool, the beach or the ballfield.</li>
+      <li><strong>It is finished before the warm months.</strong> A kitchen or bathroom started in the winter is usually done before spring. That means a summer of using it, hosting in it, or listing the house with it, instead of a summer of living around a project.</li>
+      <li><strong>It lines up with the spring market.</strong> If you are thinking about selling next year, the interior updates buyers notice most, kitchens, bathrooms and flooring, have to be done before the listing photos, not after.</li>
+    </ul>
+
+    <h2>The projects that work well this winter</h2>
+    <ul>
+      <li><strong>Kitchens.</strong> Cabinets, counters, tile, lighting and appliances are all interior work. The 3D design and selections can happen in the first weeks, while the house is still decorated for the holidays.</li>
+      <li><strong>Bathrooms.</strong> A primary bath, a hall bath or a tub to shower conversion. If the house has only one full bathroom, we plan the sequence so the time without a working shower is as short as possible.</li>
+      <li><strong>Basements.</strong> Finishing a basement adds a family room, an office, a guest suite or a gym, and it is entirely indoors. Winter is also when you find out whether the basement stays dry and warm, which is useful information before you finish it.</li>
+      <li><strong>Flooring, drywall and paint.</strong> Replacing carpet with hardwood or LVP, repairing walls and ceilings, and repainting rooms are all good winter work, especially combined into one whole-floor refresh.</li>
+      <li><strong>Layout changes.</strong> Opening a wall between the kitchen and the living room, adding a half bath, or turning an unused room into an office. These take engineering, permits and some patience, which is exactly why starting the planning in winter pays off.</li>
+    </ul>
+
+    <h2>What to design now and build in spring</h2>
+    <p>Some work depends on outdoor temperatures. Concrete has to cure, exterior paint and many sealants have minimum application temperatures set by the manufacturer, and digging footings in frozen ground is slow and messy. Decks, patios, porches, exterior painting and most additions are better built when it warms up.</p>
+    <p>That does not mean waiting until spring to start. The design, the drawings, the permit application and the material selections for an outdoor project can all be done over the winter. Then, when the weather turns, the project is ready for a crew instead of just getting started on paperwork. The families who have a new deck by Memorial Day are almost always the ones who planned it in January.</p>
+
+    <h2>Living in the house during a winter remodel</h2>
+    <ol>
+      <li><strong>Dust and heat.</strong> Work areas are closed off with plastic barriers and the floors leading to them are protected. Heating vents in the work zone are covered so dust does not travel through the system, while the rest of the house stays warm.</li>
+      <li><strong>A temporary kitchen.</strong> For a kitchen remodel, set up a small station somewhere else in the house: the refrigerator, a microwave, a coffee maker and a folding table go a long way. Plan simple meals and use paper plates for a few weeks.</li>
+      <li><strong>The holidays.</strong> If family is coming, tell us the dates before the schedule is set. It is much easier to plan the project around a holiday than to rush a kitchen to be usable by one. We wrote about how the full sequence lines up in our <a href="/blog/remodel-timeline-before-the-holidays.html">remodel timeline guide</a>.</li>
+      <li><strong>Snow days.</strong> Interior work can usually continue in bad weather, but material deliveries and inspections can slip a day when the roads are bad. Those are the days to expect a small adjustment, not a stopped project.</li>
+    </ol>
+
+    <h2>How to get started</h2>
+    <p>The order is the same in any season: an evaluation and measurements, then the design and selections, then permits and materials, and only then a crew start date. The part that depends on you is the design, so that is the part to start early. If you want to see how the design step works, our guide on <a href="/blog/see-it-before-you-build-it-3d-design.html">seeing your room in 3D before you build</a> walks through it.</p>
+
+    <div class="callout">
+      <p><strong>Thinking about a kitchen, bathroom, basement or a spring outdoor project?</strong> Send us a few photos of the space and what you want it to do better, and we will tell you how the project would come together this winter. One team from first concept to final walkthrough: design, permits, materials and construction. Call <a href="tel:+17035968375">(703) 596-8375</a>, <a href="/contact.html">request an evaluation</a>, or see how the process works on <a href="/our-process.html">our process page</a>.</p>
+    </div>
+
+    <p class="article-sources">Project schedules, start dates and the sequence of work are confirmed in writing for each project. Manufacturer temperature requirements for exterior materials vary by product and are followed as written.</p>
+""",
+    },
+    {
         "slug": "see-it-before-you-build-it-3d-design",
         "tag": "Design",
         "title": "See It Before You Build It: How 3D Design Keeps a Remodel on Track",
