@@ -1,6 +1,11 @@
 :{$PORT:8080} {
 	root * /usr/share/caddy
 	encode gzip
+	# Keep non-production hosts (the preview environment and the raw
+	# *.up.railway.app domains) out of search results. Only the real
+	# domain is indexable.
+	@notlive not host www.dfchomeimprovement.com dfchomeimprovement.com
+	header @notlive X-Robots-Tag "noindex, nofollow"
 	# Canonical host: 301 the bare apex → www, preserving path + query.
 	# Host-scoped (apex only), so www is unaffected. Live since 2026-06-10
 	# (apex DNS moved to Cloudflare, CNAME-flattened to Railway).
@@ -15,6 +20,15 @@
 		reverse_proxy https://dfc-portal-production.up.railway.app {
 			header_up Host dfc-portal-production.up.railway.app
 		}
+	}
+
+	# Server-side features (Google rating/reviews, later the AI tools): proxy
+	# /api/* to the dfc-api Railway service over the private network. Same
+	# environment, same name, so preview talks to preview and production to
+	# production. API_UPSTREAM overrides it if the service is ever renamed.
+	@api path /api/*
+	handle @api {
+		reverse_proxy {$API_UPSTREAM:dfc-api.railway.internal:8080}
 	}
 
 	# Static marketing site (everything else).

@@ -16,6 +16,48 @@ EMPLOYEE_PORTAL = "/employee/"
 JOBBER_EMBED = """<div id="2fd5e64e-6cab-4257-bd4e-f0e85b523082-2323534"></div>
 <link rel="stylesheet" href="https://d3ey4dbjkt2f6s.cloudfront.net/assets/external/work_request_embed.css" media="screen" />
 <script src="https://d3ey4dbjkt2f6s.cloudfront.net/assets/static_link/work_request_embed_snippet.js" clienthub_id="2fd5e64e-6cab-4257-bd4e-f0e85b523082-2323534" form_url="https://clienthub.getjobber.com/client_hubs/2fd5e64e-6cab-4257-bd4e-f0e85b523082/public/work_request/embedded_work_request_form?form_id=2323534"></script>"""
+# Google Business Profile rating. These are the numbers baked into the page;
+# the homepage pill refreshes them live from /api/google-rating (dfc-api).
+GOOGLE_RATING  = "4.8"
+GOOGLE_REVIEWS = "63"
+GOOGLE_MAPS_URL = "https://maps.app.goo.gl/AUjVDsK2nXdHqPy68"
+# Homepage reviews strip: hand-picked 5-star Google reviews (short excerpts,
+# reviewer's words verbatim). Picked 2026-10-09 from the Google listing.
+GOOGLE_REVIEWS_PICKS = [
+    ("Emily Loving", "1908 farmhouse restoration",
+     "To most it looked like a tear down job, but Brian came out and said he could fix it. They did unbelievable work."),
+    ("Sandra Perroni", "Master bathroom remodel",
+     "Brian and his team were professional, respectful and very friendly."),
+    ("Shelton L", "Bathroom remodel",
+     "Their pricing was fair and transparent, with no surprises along the way."),
+    ("bluechap42", "Accessible bathroom &amp; bedroom",
+     "Using photos we provided for inspiration, DFC expertly brought our vision to life."),
+    ("Lydelle Jackson", "Whole-house renovation",
+     "We spent over $170k with DFC and don't regret it one bit. I trust them 100%."),
+    ("Vincent Jacobucci", "Garage to in-law suite",
+     "They took care of all the city permits and inspections, which made the process simple from my perspective."),
+    ("Chris Kemp", "Whole-home renovation",
+     "The project was completed on schedule and budget and the quality of the work was very good."),
+    ("Danny Baiden", "Major renovation",
+     "They provided digital renderings that were accurate down to the drawer pulls."),
+]
+GOOGLE_G = ('<svg class="rr-g" viewBox="0 0 48 48" aria-hidden="true">'
+            '<path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.3-.4-3.5z"/>'
+            '<path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>'
+            '<path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/>'
+            '<path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.2-.1-2.3-.4-3.5z"/></svg>')
+
+def review_strip():
+    cards = "".join(
+        f"""<a class="rr-card" href="{GOOGLE_MAPS_URL}" target="_blank" rel="noopener">
+          <span class="rr-head"><span class="rr-avatar" aria-hidden="true">{name[0].upper()}</span>
+            <span class="rr-who"><span class="rr-name">{name}</span><span class="rr-proj">{proj}</span></span>{GOOGLE_G}</span>
+          <span class="rr-stars" aria-label="5 out of 5 stars">★★★★★</span>
+          <span class="rr-text">“{quote}”</span>
+        </a>""" for name, proj, quote in GOOGLE_REVIEWS_PICKS)
+    # two identical sets so the CSS loop is seamless; the copy is hidden from screen readers
+    return (f'<div class="rr-set">{cards}</div>'
+            f'<div class="rr-set" aria-hidden="true" inert>{cards}</div>')
 AREAS = ["Northern Virginia", "Fairfax", "Arlington", "Alexandria", "Falls Church",
          "Vienna", "McLean", "Richmond", "Washington DC"]
 # Local-SEO service area (Reinstate Labs homepage handoff, 2026-08)
@@ -56,6 +98,10 @@ def img(s): return M[s]["src"]
 def thumb(s): return M[s]["thumb"]
 
 # Google tag (gtag.js) — Google Ads / Analytics
+# Cache-busting version for styles.css / *.js links. Bump on any CSS or JS change,
+# or browsers keep serving their cached copy (Caddy sends no Cache-Control).
+ASSET_VER = "20261009n"
+
 GTAG = """<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QRMHK61G1N"></script>
 <script>
@@ -99,7 +145,7 @@ def head(title, desc, page):
                     "postalCode": ADDR_ZIP, "addressCountry": "US"},
         "sameAs": [IG_URL, FB_URL],
         "areaServed": SCHEMA_AREAS,
-        "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.8", "reviewCount": "58"},
+        "aggregateRating": {"@type": "AggregateRating", "ratingValue": GOOGLE_RATING, "reviewCount": GOOGLE_REVIEWS},
     }
     return f"""<!doctype html>
 <html lang="en">
@@ -121,7 +167,7 @@ def head(title, desc, page):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css">
+<link rel="stylesheet" href="assets/css/styles.css?v={ASSET_VER}">
 <script type="application/ld+json">{json.dumps(jsonld)}</script>
 {META_PIXEL}
 </head>
@@ -162,8 +208,10 @@ def header(current):
   </nav>
   <div class="header-right">
     <a class="header-phone" href="tel:{PHONE_TEL}">{PHONE_DISP}</a>
-    <a class="btn header-cta" href="{JOBBER_FORM}" target="_blank" rel="noopener">Request Evaluation</a>
-    <a class="header-portal" href="{EMPLOYEE_PORTAL}" rel="nofollow" title="Employee portal" aria-label="Open employee portal">Employee</a>
+    <a class="btn header-cta" href="{JOBBER_FORM}" target="_blank" rel="noopener">Free Consultation</a>
+    <a class="header-quick" href="tel:{PHONE_TEL}" aria-label="Call {PHONE_DISP}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg><span>Call</span></a>
+    <a class="header-quick" href="sms:{PHONE_TEL}" aria-label="Text {PHONE_DISP}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9 9 0 0 1-3.8-.8L3 20.5l1.4-4.6A8 8 0 0 1 3 11.5 8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/></svg><span>Text</span></a>
+    <a class="header-portal" href="{EMPLOYEE_PORTAL}" rel="nofollow" title="Employee portal" aria-label="Open employee portal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><circle cx="12" cy="10" r="3.2"/><path d="M6.3 18.5c1.3-2.2 3.3-3.4 5.7-3.4s4.4 1.2 5.7 3.4"/></svg></a>
     <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
       <span></span><span></span><span></span>
     </button>
@@ -201,6 +249,7 @@ def cta():
       <div class="cta-actions">
         <a class="btn btn--light" href="contact.html">Request a free consultation</a>
         <a class="link-arrow light" href="tel:{PHONE_TEL}">Call {PHONE_DISP} {ARROW}</a>
+        <a class="link-arrow light" href="sms:{PHONE_TEL}">Text us {ARROW}</a>
       </div>
     </div>
   </section>"""
@@ -255,7 +304,8 @@ def footer():
     </div>
   </div>
 </footer>
-<script src="assets/js/script.js" defer></script>
+<script src="assets/js/track.js?v={ASSET_VER}" defer></script>
+<script src="assets/js/script.js?v={ASSET_VER}" defer></script>
 </body>
 </html>"""
 
@@ -350,27 +400,29 @@ def build_index():
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-bg"><img src="{img('kitchen-thomas-jefferson')}" alt="Custom kitchen remodel by DFC Home Improvement" fetchpriority="high"></div>
+    <div class="hero-bg"><img src="assets/img/kitchen-thomas-jefferson-hd.jpg" srcset="assets/img/kitchen-thomas-jefferson-hd-1280.jpg 1280w, assets/img/kitchen-thomas-jefferson-hd.jpg 2560w" sizes="100vw" alt="Custom kitchen remodel by DFC Home Improvement" fetchpriority="high"></div>
     <div class="hero-inner">
-      <img class="hero-logo" src="assets/logo/dfc-logo-white.png" alt="DFC Home Improvement">
-      <p class="hero-tagline">Your home should feel like a vacation.</p>
+      <a class="hero-rating" href="{GOOGLE_MAPS_URL}" target="_blank" rel="noopener" data-google-rating aria-label="Rated {GOOGLE_RATING} out of 5 from {GOOGLE_REVIEWS} Google reviews">
+        <span class="hr-stars" aria-hidden="true">★★★★★</span>
+        <span class="hr-score"><strong data-gr-rating>{GOOGLE_RATING}</strong> · <span data-gr-count>{GOOGLE_REVIEWS}</span> Google reviews</span>
+      </a>
+      <p class="hero-tagline"><span class="hw" style="--i:0">Your</span> <span class="hw" style="--i:1">home</span> <span class="hw" style="--i:2">should</span> <span class="hw" style="--i:3">feel</span> <span class="hw" style="--i:4">like</span> <span class="hw" style="--i:5">a</span> <span class="hw" style="--i:6">vacation.</span></p>
       <h1 class="hero-service">Kitchen &amp; Bathroom Remodeling in Northern Virginia</h1>
-      <p class="hero-kicker">Class A Design-Build · Northern Virginia · Richmond · DC</p>
+      <ul class="hero-chips" aria-label="Credentials and service area">
+        <li>Class A Design-Build</li><li>BBB A+ Accredited</li><li>Northern Virginia</li><li>Richmond</li><li>DC</li>
+      </ul>
       <div class="hero-actions">
-        <a class="btn btn--light" href="contact.html">Request a free consultation</a>
-        <a class="btn btn--light" href="portfolio.html" style="background:rgba(255,255,255,.08)">View our work</a>
+        <a class="btn btn--light btn--primary-glass" href="contact.html">Request a free consultation</a>
+        <a class="btn btn--light" href="portfolio.html">View our work</a>
       </div>
     </div>
-  </section>
-
-  <!-- RATING STRIP -->
-  <section class="rating-strip">
-    <div class="wrap rs-inner">
-      <div class="rs-stars" aria-hidden="true">★★★★★</div>
-      <div class="rs-score"><strong>4.8</strong> / 5 on Google Reviews</div>
-      <div class="rs-note">Rated by homeowners across Northern Virginia, DC &amp; Richmond</div>
+    <!-- GOOGLE REVIEWS STRIP: hand-picked 5-star excerpts, scrolling on its own
+         along the bottom of the hero -->
+    <div class="review-rail" role="region" aria-label="Reviews from Google">
+      <div class="rr-track">{review_strip()}</div>
     </div>
   </section>
+  <script src="assets/js/google.js?v={ASSET_VER}" defer></script>
 
   <!-- WHO WE ARE (sage) -->
   <section class="section bg-sage who">
@@ -452,7 +504,7 @@ def build_index():
   </section>
 
   <!-- CLIENT NOTES -->
-  <section class="section wrap">
+  <section class="section wrap" id="reviews">
     <div class="head-row">
       <div class="reveal"><p class="eyebrow">Client notes</p><h2>Trusted for communication, craft and complicated work.</h2></div>
       <p class="h-right reveal d1">A few words from homeowners across Northern Virginia, DC and Richmond.</p>
@@ -822,11 +874,11 @@ def build_contact():
     areas = " · ".join(AREAS)
     body = f"""
 <main id="top">
-{page_head("Contact", "Let's talk about your project.", "Tell us a little about what you have in mind. We'll follow up to schedule your free evaluation — no obligation, honest pricing, expert guidance.")}
+{page_head("Contact", "Let's talk about your project.", "Tell us a little about what you have in mind. We'll call you to talk it through, then set up a visit if it's a fit. No obligation, honest pricing, expert guidance.")}
   <section class="section--tight wrap">
     <div class="contact-grid">
       <div class="contact-info reveal">
-        <div class="ci-block"><div class="ci-lab">Call or text</div><div class="ci-val"><a href="tel:{PHONE_TEL}">{PHONE_DISP}</a></div></div>
+        <div class="ci-block"><div class="ci-lab">Call or text</div><div class="ci-val"><a href="tel:{PHONE_TEL}">{PHONE_DISP}</a></div><div class="ci-quick"><a href="tel:{PHONE_TEL}">Call</a><a href="sms:{PHONE_TEL}">Text</a></div></div>
         <div class="ci-block"><div class="ci-lab">Email</div><div class="ci-val"><a href="mailto:{EMAIL}">{EMAIL}</a></div></div>
         <div class="ci-block"><div class="ci-lab">Service area</div><div class="ci-val small">{areas}</div></div>
         <div class="ci-block"><div class="ci-lab">Credentials</div><div class="ci-val small">Class A Licensed General Contractor · Licensed &amp; Insured · Design-Build</div></div>
@@ -834,11 +886,11 @@ def build_contact():
       </div>
       <div class="form-card">
         <div class="fc-title">Request a free consultation</div>
-        <p class="fc-sub">Book your on-site assessment online — pick a date, add photos, and it goes straight into our scheduling system.</p>
+        <p class="fc-sub">Tell us about your project and add photos if you have them. We'll call you within 24 hours to talk it through.</p>
         <div class="jobber-embed">
           {JOBBER_EMBED}
         </div>
-        <p class="form-note">Prefer to talk? Call or text <a href="tel:{PHONE_TEL}">{PHONE_DISP}</a>.</p>
+        <p class="form-note">Prefer to talk? <a href="tel:{PHONE_TEL}">Call</a> or <a href="sms:{PHONE_TEL}">text</a> {PHONE_DISP}.</p>
       </div>
     </div>
   </section>

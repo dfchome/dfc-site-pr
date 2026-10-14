@@ -14,6 +14,10 @@ PHONE_DISP = "(703) 596-8375"
 PHONE_TEL = "+17035968375"
 EMAIL = "admin@dfchomeimprovement.com"
 
+# Cache-busting version for styles.css / *.js links. Bump on any CSS or JS change,
+# or browsers keep serving their cached copy (Caddy sends no Cache-Control).
+ASSET_VER = "20261009n"
+
 GTAG = """<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QRMHK61G1N"></script>
 <script>
@@ -100,7 +104,7 @@ def head_block(title, desc, canonical_path, og_image, jsonld=None):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/styles.css">
+<link rel="stylesheet" href="/assets/css/styles.css?v={ASSET_VER}">
 {ld}{ARTICLE_CSS}
 {META_PIXEL}
 </head>
@@ -121,8 +125,10 @@ HEADER = f"""<header class="site-header" id="siteHeader">
   </nav>
   <div class="header-right">
     <a class="header-phone" href="tel:{PHONE_TEL}">{PHONE_DISP}</a>
-    <a class="btn header-cta" href="/contact.html">Request Evaluation</a>
-    <a class="header-portal" href="/employee/" rel="nofollow" title="Employee portal" aria-label="Open employee portal">Employee</a>
+    <a class="btn header-cta" href="/contact.html">Free Consultation</a>
+    <a class="header-quick" href="tel:{PHONE_TEL}" aria-label="Call {PHONE_DISP}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg><span>Call</span></a>
+    <a class="header-quick" href="sms:{PHONE_TEL}" aria-label="Text {PHONE_DISP}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9 9 0 0 1-3.8-.8L3 20.5l1.4-4.6A8 8 0 0 1 3 11.5 8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/></svg><span>Text</span></a>
+    <a class="header-portal" href="/employee/" rel="nofollow" title="Employee portal" aria-label="Open employee portal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><circle cx="12" cy="10" r="3.2"/><path d="M6.3 18.5c1.3-2.2 3.3-3.4 5.7-3.4s4.4 1.2 5.7 3.4"/></svg></a>
     <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
       <span></span><span></span><span></span>
     </button>
@@ -159,6 +165,7 @@ CTA_BAND = f"""<section class="section cta-band">
     <div class="cta-actions">
       <a class="btn btn--light" href="/contact.html">Request a free consultation</a>
       <a class="link-arrow light" href="tel:{PHONE_TEL}">Call {PHONE_DISP} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></a>
+      <a class="link-arrow light" href="sms:{PHONE_TEL}">Text us <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></a>
     </div>
   </div>
 </section>"""
@@ -201,7 +208,8 @@ FOOTER = f"""<footer class="site-footer">
     </div>
   </div>
 </footer>
-<script src="/assets/js/script.js" defer></script>
+<script src="/assets/js/track.js?v={ASSET_VER}" defer></script>
+<script src="/assets/js/script.js?v={ASSET_VER}" defer></script>
 </body>
 </html>"""
 
