@@ -125,7 +125,8 @@ if ($path === '/api/ai-save') {
 
     $root = ai_store();
     // Housekeeping: a design only needs to outlive the follow-up call.
-    foreach (glob($root . '/*.{png,jpg}', GLOB_BRACE) ?: [] as $old) {
+    // (no GLOB_BRACE: the container is Alpine/musl, which does not support it)
+    foreach (array_merge(glob($root . '/*.png') ?: [], glob($root . '/*.jpg') ?: []) as $old) {
         if (filemtime($old) < time() - 90 * 86400) @unlink($old);
     }
     $name = date('Ymd') . '-' . bin2hex(random_bytes(8)) . '.' . $ext;
