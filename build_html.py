@@ -100,7 +100,7 @@ def thumb(s): return M[s]["thumb"]
 # Google tag (gtag.js) — Google Ads / Analytics
 # Cache-busting version for styles.css / *.js links. Bump on any CSS or JS change,
 # or browsers keep serving their cached copy (Caddy sends no Cache-Control).
-ASSET_VER = "20261009n"
+ASSET_VER = "20261019a"
 
 GTAG = """<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QRMHK61G1N"></script>
@@ -173,6 +173,20 @@ def head(title, desc, page):
 </head>
 <body data-page="{page}">"""
 
+# ---------------------------------------------------------------- TOOLS MENU
+# The "Tools" dropdown in the desktop nav. Opens on hover and on keyboard /
+# tap focus (:focus-within), closed by default. The mobile menu lists the
+# tools as plain links instead. `prefix` is "/" for pages outside the root.
+AI_TOOL_PAGE = "ai-kitchen-inspiration.html"
+def tools_menu(prefix="", current=False):
+    cur = ' current' if current else ''
+    return f"""<div class="nav-drop{cur}">
+        <button class="nav-drop-btn" type="button" aria-haspopup="true">Tools <i class="nav-caret" aria-hidden="true"></i></button>
+        <div class="nav-drop-menu">
+          <a href="{prefix}{AI_TOOL_PAGE}"><b>AI Kitchen Inspiration</b><span>Upload a photo and see your kitchen remodeled</span></a>
+        </div>
+      </div>"""
+
 # ---------------------------------------------------------------- HEADER
 def header(current):
     def link(href, label, key):
@@ -184,6 +198,7 @@ def header(current):
         link("portfolio.html", "Portfolio", "portfolio"),
         link("our-process.html", "Our Process", "process"),
         link("index.html#areas", "Service Areas", "areas"),
+        tools_menu("" , current == "tools"),
         link("blog/", "Blog", "blog"),
         link("contact.html", "Contact", "contact"),
     ])
@@ -194,6 +209,7 @@ def header(current):
         '<a href="portfolio.html">Portfolio</a>',
         '<a href="our-process.html">Our Process</a>',
         '<a href="index.html#areas">Service Areas</a>',
+        f'<a href="{AI_TOOL_PAGE}">AI Kitchen Inspiration</a>',
         '<a href="blog/">Blog</a>',
         '<a href="contact.html">Contact</a>',
     ])
@@ -1176,6 +1192,148 @@ def build_process():
               DESC, "process"),
          body, "process")
 
+# ================================================================ AI KITCHEN INSPIRATION
+# The wizard's look lives in assets/css/ai-tool.css and its behaviour in
+# assets/js/ai-tool.js; the server side is api/public/ai.php (dfc-api).
+def build_ai_tool():
+    up = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" '
+          'stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/>'
+          '<line x1="12" y1="3" x2="12" y2="15"/></svg>')
+    body = f"""
+<main id="top">
+{page_head("AI Kitchen Inspiration", "See your kitchen, reimagined.",
+           "Upload a photo of your kitchen as it looks today, choose the finishes you love, and see it remodeled in seconds. Free, with nothing to install.")}
+  <section class="aip">
+    <div class="wrap">
+      <div class="aip-grid">
+        <div class="aip-card">
+          <div class="aip-steps">
+            <div class="aip-step active" data-step="1"><span class="dot">1</span><span class="lbl">Your space</span></div>
+            <div class="aip-line" data-line="1"><i></i></div>
+            <div class="aip-step" data-step="2"><span class="dot">2</span><span class="lbl">Your style</span></div>
+            <div class="aip-line" data-line="2"><i></i></div>
+            <div class="aip-step" data-step="3"><span class="dot">3</span><span class="lbl">Your remodel</span></div>
+          </div>
+
+          <!-- 1. the photo -->
+          <div class="aip-panel show" data-panel="1">
+            <div class="aip-drop" id="aipDrop" role="button" tabindex="0" aria-label="Add a photo of your kitchen">
+              {up}
+              <b>Add a photo of your kitchen</b>
+              <p>Stand back far enough to get the cabinets and counters in the frame.</p>
+              <span class="aip-choose">Choose a photo</span>
+              <input type="file" id="aipFile" accept="image/*" hidden>
+            </div>
+            <div class="aip-preview" id="aipPreview">
+              <img id="aipPreviewImg" alt="The kitchen you uploaded">
+              <span class="aip-change" id="aipChange">Use a different photo</span>
+            </div>
+            <div class="aip-actions">
+              <button class="btn btn--sage" id="aipToStyle" disabled>Continue to style {ARROW}</button>
+            </div>
+          </div>
+
+          <!-- 2. the finishes -->
+          <div class="aip-panel" data-panel="2">
+            <div class="aip-panel-head">
+              <div class="aip-progress">
+                <div class="aip-progress-row"><span id="aipCount">0 of 6 chosen</span><b id="aipPct">0%</b></div>
+                <div class="aip-bar"><i id="aipFill"></i></div>
+              </div>
+              <label class="aip-adv" title="Type your own answers instead of choosing from the lists">
+                <input type="checkbox" id="aipAdv">
+                <span class="aip-track"><span class="aip-thumb"></span></span>
+                <span>Advanced <em>(type your own)</em></span>
+              </label>
+            </div>
+            <div class="aip-fields" id="aipGrid"></div>
+            <div class="aip-notes" id="aipNotesWrap" hidden>
+              <label class="aip-lab" for="aipNotes">Anything else</label>
+              <textarea id="aipNotes" placeholder="Must-keep features, a material you have your heart set on, a look you are after"></textarea>
+            </div>
+            <div class="aip-actions">
+              <button class="btn" id="aipBack">Back</button>
+              <button class="btn btn--sage" id="aipGo" disabled>Choose 6 to continue</button>
+            </div>
+          </div>
+
+          <!-- 3. the result -->
+          <div class="aip-panel" data-panel="3">
+            <div class="aip-loading" id="aipLoading">
+              <div class="aip-spin"></div>
+              <h3>Designing your new kitchen</h3>
+              <p>This usually takes about twenty seconds. Please keep this page open.</p>
+              <div class="aip-err" id="aipErr"></div>
+            </div>
+            <div class="aip-result" id="aipResult">
+              <h2>Your kitchen, reimagined</h2>
+              <p class="sub">Drag the handle to compare it with the photo you started from.</p>
+              <div class="aip-ba" id="aipBa">
+                <img id="aipAfter" alt="Your kitchen with the finishes you chose">
+                <div class="aip-before"><img id="aipBefore" alt="Your kitchen today"></div>
+                <span class="aip-tag l">Before</span>
+                <span class="aip-tag r">After</span>
+                <div class="aip-div" id="aipDiv"><span class="aip-handle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="10 7 5 12 10 17"/><polyline points="14 7 19 12 14 17"/></svg></span></div>
+                <a class="aip-open" id="aipOpen" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Open full size</a>
+              </div>
+              <button class="btn btn--sage aip-cta" id="aipSendOpen">Send this design to DFC {ARROW}</button>
+              <span class="aip-restart" id="aipRestart">Start again with a different photo</span>
+
+              <div class="aip-send" id="aipSend">
+                <h3>Send your design to us</h3>
+                <p>We will look at what you put together and call you within 24 hours to talk through what it would take in your home.</p>
+                <form class="aip-form" id="aipForm" novalidate>
+                  <input type="text" id="aipName" placeholder="Your name" required autocomplete="name" aria-label="Your name">
+                  <input type="tel" id="aipPhone" placeholder="Phone" required autocomplete="tel" aria-label="Phone">
+                  <input class="full" type="email" id="aipEmail" placeholder="Email" required autocomplete="email" aria-label="Email">
+                  <input class="full" type="text" id="aipAddress" placeholder="Project address or ZIP code" required autocomplete="street-address" aria-label="Project address or ZIP code">
+                  <div class="aip-hp" aria-hidden="true"><input type="text" id="aipHoney" tabindex="-1" autocomplete="off"></div>
+                  <button type="submit" class="btn btn--sage" id="aipSubmit">Send my design</button>
+                  <p class="aip-status" id="aipStatus" role="status"></p>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="aip-aside">
+          <div class="aip-box">
+            <h2>How it works</h2>
+            <ol class="aip-how">
+              <li><span class="n">1</span><div><b>Add a photo</b><p>Your kitchen exactly as it is today. No tidying required.</p></div></li>
+              <li><span class="n">2</span><div><b>Pick your finishes</b><p>Six quick choices, or switch on Advanced and describe it in your own words.</p></div></li>
+              <li><span class="n">3</span><div><b>See it remodeled</b><p>Same room, same layout, new finishes. Compare it side by side.</p></div></li>
+              <li><span class="n">4</span><div><b>Send it to us</b><p>Love where it landed? Send it over and we will show you how to make it real.</p></div></li>
+            </ol>
+          </div>
+          <div class="aip-note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <div>
+              <b>A starting point for ideas</b>
+              <p>Your design is a picture of the possibilities. Send it to us and our Class A licensed design-build team will show you what is possible in your kitchen, with photoreal 3D design and real pricing.</p>
+            </div>
+          </div>
+          <div class="aip-box aip-talk">
+            <h2>Rather talk it through?</h2>
+            <p>A quick call with our team will answer your questions about cost, timing and what your kitchen can become.</p>
+            <div class="row">
+              <a class="btn btn--sage" href="tel:{PHONE_TEL}">Call</a>
+              <a class="btn" href="sms:{PHONE_TEL}">Text</a>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+{cta()}
+</main>
+<script src="assets/js/ai-tool.js?v={ASSET_VER}" defer></script>"""
+    h = head("AI Kitchen Remodel Inspiration | See Your Kitchen Remodeled | DFC Home Improvement",
+             "Upload a photo of your kitchen, choose your style and finishes, and see it remodeled in seconds with AI. Free from DFC Home Improvement, a Class A design-build contractor in Northern Virginia.",
+             "tools")
+    h = h.replace("</head>", f'<link rel="stylesheet" href="assets/css/ai-tool.css?v={ASSET_VER}">\n</head>', 1)
+    page(AI_TOOL_PAGE, h, body, "tools")
+
 if __name__ == "__main__":
     build_index()
     build_new_construction()
@@ -1196,6 +1354,7 @@ if __name__ == "__main__":
     build_contact()
     build_privacy()
     build_terms()
+    build_ai_tool()
     # remove the old services page if present
     old = os.path.join(ROOT, "services.html")
     if os.path.exists(old): os.remove(old); print("removed services.html")

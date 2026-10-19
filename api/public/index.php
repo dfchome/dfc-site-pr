@@ -6,6 +6,10 @@ if ($path === '/api/google') {
     require __DIR__ . '/google.php';
     exit;
 }
+if ($path === '/api/ai-preview' || $path === '/api/ai-save' || str_starts_with($path, '/api/ai-design/')) {
+    require __DIR__ . '/ai.php';
+    exit;
+}
 if ($path === '/api/health') {
     header('Content-Type: application/json');
     echo '{"ok":true}';

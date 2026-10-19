@@ -1,0 +1,203 @@
+/* ============================================================
+   AI KITCHEN INSPIRATION  (ai-kitchen-inspiration.html)
+   Three-step wizard: photo -> six finishes -> before/after + send to DFC.
+   Ported from the Fox Remodeling / McManus tool, dressed in the DFC
+   design system (Urbanist + DM Sans, sage, clay accent, warm paper).
+   ============================================================ */
+.aip { padding: clamp(40px, 5vw, 72px) 0 clamp(64px, 8vw, 112px); background: var(--paper); }
+.aip-grid { display: grid; grid-template-columns: minmax(0, 1.62fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+
+.aip-card {
+  background: #fff; border: 1px solid var(--line-soft); border-radius: 8px;
+  padding: clamp(22px, 2.6vw, 34px); min-width: 0;
+}
+
+/* ---- stepper ---- */
+.aip-steps { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+.aip-step { display: flex; align-items: center; gap: 10px; flex: 0 0 auto; }
+.aip-step .dot {
+  width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center;
+  font-family: var(--head); font-size: .86rem; font-weight: 600;
+  border: 1px solid var(--line); color: var(--ink-mute); background: var(--paper);
+  transition: all .4s var(--ease);
+}
+.aip-step .lbl { font-size: .78rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-mute); transition: color .4s var(--ease); }
+.aip-step.active .dot { background: var(--sage-deep); border-color: var(--sage-deep); color: #fff; }
+.aip-step.active .lbl { color: var(--ink); }
+.aip-step.done .dot { background: var(--accent); border-color: var(--accent); color: #fff; }
+.aip-line { flex: 1 1 auto; height: 1px; background: var(--line); position: relative; }
+.aip-line i { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--accent); transition: width .5s var(--ease); }
+.aip-line.fill i { width: 100%; }
+
+.aip-panel { display: none; }
+.aip-panel.show { display: block; animation: aip-in .45s var(--ease) both; }
+@keyframes aip-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* ---- step 1: the photo ---- */
+.aip-drop {
+  border: 1px dashed rgba(13, 8, 5, .26); border-radius: 6px; background: var(--paper);
+  padding: 58px 24px; text-align: center; cursor: pointer;
+  transition: border-color .3s var(--ease), background .3s var(--ease);
+}
+.aip-drop:hover, .aip-drop.drag { border-color: var(--sage-deep); background: var(--sage-soft); }
+.aip-drop svg { width: 30px; height: 30px; stroke: var(--sage-deep); margin: 0 auto 14px; display: block; }
+.aip-drop b { display: block; font-family: var(--head); font-size: 1.3rem; font-weight: 600; color: var(--ink); }
+.aip-drop p { font-size: .94rem; color: var(--ink-soft); margin: 6px 0 18px; }
+.aip-choose {
+  display: inline-flex; padding: .85em 1.8em; border: 1px solid var(--ink); background: #fff;
+  font-size: .76rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--ink);
+}
+.aip-preview { display: none; }
+.aip-preview.show { display: block; }
+.aip-preview img { width: 100%; border-radius: 6px; display: block; }
+.aip-change { display: inline-block; margin-top: 12px; font-size: .9rem; color: var(--accent-ink); cursor: pointer; border-bottom: 1px solid currentColor; }
+
+.aip .btn svg { width: 16px; height: 16px; flex: none; }
+.aip-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; flex-wrap: wrap; }
+.aip-actions .btn[disabled] { opacity: .45; cursor: not-allowed; pointer-events: none; }
+
+/* ---- step 2: the finishes ---- */
+.aip-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; margin-bottom: 22px; }
+.aip-progress { flex: 1 1 220px; min-width: 0; }
+.aip-progress-row { display: flex; justify-content: space-between; align-items: baseline; font-size: .84rem; color: var(--ink-soft); margin-bottom: 8px; }
+.aip-progress-row b { font-family: var(--head); color: var(--sage-deep); font-weight: 600; }
+.aip-bar { height: 3px; background: var(--line); overflow: hidden; }
+.aip-bar i { display: block; height: 100%; width: 0; background: var(--sage-deep); transition: width .45s var(--ease); }
+
+.aip-adv { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; font-size: .88rem; color: var(--ink); }
+.aip-adv input { position: absolute; opacity: 0; pointer-events: none; }
+.aip-track { width: 40px; height: 22px; border-radius: 100px; background: var(--line); position: relative; transition: background .3s var(--ease); flex: 0 0 auto; }
+.aip-thumb { position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: transform .3s var(--ease); box-shadow: 0 1px 3px rgba(13, 8, 5, .3); }
+.aip-adv input:checked + .aip-track { background: var(--sage-deep); }
+.aip-adv input:checked + .aip-track .aip-thumb { transform: translateX(18px); }
+.aip-adv input:focus-visible + .aip-track { outline: 2px solid var(--accent); outline-offset: 2px; }
+.aip-adv em { color: var(--ink-mute); font-style: normal; }
+
+.aip-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.aip-field { position: relative; min-width: 0; }
+.aip-field > label, .aip-lab {
+  display: block; font-size: .72rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-mute); margin-bottom: 8px;
+}
+.aip-field.answered > label { color: var(--accent-ink); }
+.aip-dd {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 14px 16px; border: 1px solid rgba(13, 8, 5, .18); border-radius: 4px; background: #fff;
+  font: 400 .98rem var(--sans); color: var(--ink-mute); cursor: pointer; text-align: left;
+  transition: border-color .3s var(--ease);
+}
+.aip-field.answered .aip-dd { color: var(--ink); border-color: rgba(49, 61, 44, .55); }
+.aip-dd:hover { border-color: var(--sage-deep); }
+.aip-caret { width: 7px; height: 7px; flex: 0 0 auto; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg) translate(-2px, -2px); transition: transform .3s var(--ease); }
+.aip-field.open .aip-caret { transform: rotate(225deg) translate(-3px, -3px); }
+.aip-list {
+  position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 20;
+  background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 6px;
+  box-shadow: 0 24px 50px -20px rgba(13, 8, 5, .35);
+  opacity: 0; pointer-events: none; transform: translateY(-5px);
+  transition: opacity .22s var(--ease), transform .22s var(--ease);
+  max-height: 268px; overflow-y: auto;
+}
+.aip-field.open .aip-list { opacity: 1; pointer-events: auto; transform: none; }
+.aip-opt {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 11px 12px; border: 0; border-radius: 4px; font: 400 .95rem var(--sans); text-align: left;
+  color: var(--ink); background: none; cursor: pointer;
+}
+.aip-opt:hover { background: var(--sage-soft); }
+.aip-opt .ck { width: 14px; height: 14px; opacity: 0; stroke: var(--sage-deep); flex: 0 0 auto; }
+.aip-opt.sel { color: var(--sage-deep); font-weight: 600; }
+.aip-opt.sel .ck { opacity: 1; }
+.aip-txt, .aip-notes textarea, .aip-form input {
+  width: 100%; padding: 14px 16px; border: 1px solid rgba(13, 8, 5, .18); border-radius: 4px;
+  background: #fff; font: 400 .98rem var(--sans); color: var(--ink); outline: none;
+  transition: border-color .3s var(--ease);
+}
+.aip-txt:focus, .aip-notes textarea:focus, .aip-form input:focus { border-color: var(--sage-deep); }
+.aip-notes { margin-top: 16px; }
+.aip-notes textarea { min-height: 92px; resize: vertical; }
+
+/* ---- step 3: the result ---- */
+.aip-loading { text-align: center; padding: 60px 20px; }
+.aip-spin { width: 42px; height: 42px; margin: 0 auto 22px; border-radius: 50%; border: 2px solid var(--line); border-top-color: var(--sage-deep); animation: aip-spin 1s linear infinite; }
+@keyframes aip-spin { to { transform: rotate(360deg); } }
+.aip-loading h3 { font-size: 1.45rem; }
+.aip-loading p { font-size: .95rem; color: var(--ink-soft); margin-top: 8px; }
+.aip-err { display: none; margin-top: 18px; padding: 14px 16px; border-radius: 4px; background: rgba(192, 57, 43, .08); color: #a5321f; font-size: .94rem; text-align: left; }
+.aip-err.show { display: block; }
+
+.aip-result { display: none; }
+.aip-result h2 { font-size: clamp(1.5rem, 2.2vw, 1.9rem); }
+.aip-result .sub { font-size: .95rem; color: var(--ink-soft); margin: 6px 0 18px; }
+
+/* before/after slider: the "before" layer is clipped by width, and its
+   image is pinned to the full frame width so both halves stay in register */
+.aip-ba { position: relative; border-radius: 6px; overflow: hidden; user-select: none; touch-action: none; }
+.aip-ba img { display: block; width: 100%; }
+.aip-before { position: absolute; inset: 0 auto 0 0; width: 50%; overflow: hidden; }
+.aip-before img { position: absolute; top: 0; left: 0; height: 100%; width: auto; max-width: none; }
+.aip-div { position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; background: rgba(255, 255, 255, .92); cursor: ew-resize; }
+.aip-handle {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 40px; height: 40px; border-radius: 50%; background: #fff;
+  display: grid; place-items: center; box-shadow: 0 6px 18px rgba(13, 8, 5, .35);
+}
+.aip-handle svg { width: 20px; height: 20px; stroke: var(--sage-deep); }
+.aip-tag {
+  position: absolute; top: 12px; padding: 6px 12px; border-radius: 100px;
+  background: rgba(49, 61, 44, .82); color: #fff;
+  font-size: .68rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; pointer-events: none;
+}
+.aip-tag.l { left: 12px; }
+.aip-tag.r { right: 12px; }
+.aip-open {
+  position: absolute; right: 12px; bottom: 12px; display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 14px; border-radius: 100px; background: rgba(255, 255, 255, .94);
+  font-size: .8rem; font-weight: 600; color: var(--ink);
+}
+.aip-open svg { width: 13px; height: 13px; stroke: var(--sage-deep); }
+.aip-result .aip-cta { width: 100%; margin-top: 20px; }
+.aip-restart { display: block; text-align: center; margin-top: 14px; font-size: .9rem; color: var(--ink-soft); cursor: pointer; }
+.aip-restart:hover { color: var(--accent-ink); }
+
+/* ---- send it to DFC ---- */
+.aip-send { display: none; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--line-soft); }
+.aip-send.show { display: block; }
+.aip-send h3 { font-size: 1.4rem; }
+.aip-send > p { font-size: .95rem; color: var(--ink-soft); margin: 6px 0 18px; }
+.aip-form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.aip-form .full { grid-column: 1 / -1; }
+.aip-form .btn { grid-column: 1 / -1; width: 100%; }
+.aip-status { grid-column: 1 / -1; font-size: .94rem; min-height: 1.2em; margin: 0; }
+.aip-status.is-ok { color: var(--sage-deep); font-weight: 600; }
+.aip-status.is-error { color: #a5321f; }
+.aip-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+/* ---- aside ---- */
+.aip-aside { display: grid; gap: 16px; }
+.aip-box { background: #fff; border: 1px solid var(--line-soft); border-radius: 8px; padding: 26px; }
+.aip-box h2 { font-size: 1.3rem; margin-bottom: 16px; }
+.aip-how { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+.aip-how li { display: flex; gap: 13px; }
+.aip-how .n {
+  flex: 0 0 auto; width: 27px; height: 27px; border-radius: 50%; background: var(--sage-soft);
+  display: grid; place-items: center; font-family: var(--head); font-weight: 600; font-size: .82rem; color: var(--sage-deep);
+}
+.aip-how b { display: block; font-size: .98rem; color: var(--ink); }
+.aip-how p { font-size: .9rem; color: var(--ink-soft); margin: 2px 0 0; line-height: 1.55; }
+.aip-note { display: flex; gap: 13px; padding: 20px; background: var(--sage-soft); border: 1px solid var(--sage-soft2); border-radius: 8px; }
+.aip-note svg { width: 18px; height: 18px; stroke: var(--sage-deep); flex: 0 0 auto; margin-top: 3px; }
+.aip-note b { display: block; font-size: .98rem; color: var(--ink); }
+.aip-note p { font-size: .88rem; color: var(--ink-soft); margin: 5px 0 0; line-height: 1.6; }
+.aip-talk p { font-size: .92rem; color: var(--ink-soft); margin: 0 0 16px; line-height: 1.6; }
+.aip-talk .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.aip-talk .btn { width: 100%; padding-inline: 1em; }
+
+@media (max-width: 980px) {
+  .aip-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .aip-fields, .aip-form { grid-template-columns: 1fr; }
+  .aip-step .lbl { display: none; }
+  .aip-drop { padding: 42px 16px; }
+}

@@ -16,7 +16,7 @@ EMAIL = "admin@dfchomeimprovement.com"
 
 # Cache-busting version for styles.css / *.js links. Bump on any CSS or JS change,
 # or browsers keep serving their cached copy (Caddy sends no Cache-Control).
-ASSET_VER = "20261009n"
+ASSET_VER = "20261019a"
 
 GTAG = """<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QRMHK61G1N"></script>
@@ -121,6 +121,12 @@ HEADER = f"""<header class="site-header" id="siteHeader">
     <a href="/renovations.html">Renovations</a>
     <a href="/portfolio.html">Portfolio</a>
     <a href="/blog/" class="current">Blog</a>
+    <div class="nav-drop">
+        <button class="nav-drop-btn" type="button" aria-haspopup="true">Tools <i class="nav-caret" aria-hidden="true"></i></button>
+        <div class="nav-drop-menu">
+          <a href="/ai-kitchen-inspiration.html"><b>AI Kitchen Inspiration</b><span>Upload a photo and see your kitchen remodeled</span></a>
+        </div>
+      </div>
     <a href="/contact.html">Contact</a>
   </nav>
   <div class="header-right">
@@ -141,6 +147,7 @@ HEADER = f"""<header class="site-header" id="siteHeader">
     <a href="/renovations.html">Renovations</a>
     <a href="/portfolio.html">Portfolio</a>
     <a href="/blog/">Blog</a>
+    <a href="/ai-kitchen-inspiration.html">AI Kitchen Inspiration</a>
     <a href="/contact.html">Contact</a>
   </nav>
   <div class="m-foot">
