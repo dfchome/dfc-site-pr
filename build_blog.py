@@ -8,7 +8,7 @@ trailing slashes under Caddy's try_files).
 """
 import html, json, os
 
-ROOT = "/Users/hugohernandez/Documentos/DFC/website/dfc-site"
+ROOT = os.environ.get("DFC_SITE_ROOT", "/Users/hugohernandez/Documentos/DFC/website/dfc-site")
 SITE = "https://www.dfchomeimprovement.com"
 PHONE_DISP = "(703) 596-8375"
 PHONE_TEL = "+17035968375"
@@ -216,6 +216,52 @@ FOOTER = f"""<footer class="site-footer">
 
 # ---------------------------------------------------------------- ARTICLES
 ARTICLES = [
+    {
+        "slug": "the-estimate-sheet-we-use-on-every-job",
+        "tag": "For Contractors",
+        "title": "The estimate sheet we use on every job",
+        "card_title": "The estimate sheet we use on every job",
+        "desc": "A contractor's walkthrough of scope, quantities, labor assumptions, payment milestones and change orders, with the QuoteCraft Estimate Workbook from DFC.",
+        "card_desc": "Scope first, quantities second, price third. A practical estimating workflow and the five-sheet QuoteCraft workbook built from DFC's quoting standards.",
+        "hero": "/assets/img/kitchen-polecat-warm.jpg",
+        "hero_alt": "Finished kitchen with white cabinetry and warm wood floors by DFC Home Improvement",
+        "date": "2026-10-19",
+        "date_disp": "October 19, 2026",
+        "body": """
+    <p>A useful estimate sheet has to answer more than &ldquo;What's the total?&rdquo; It should show what you are building, how much work you measured, what the price assumes, and what happens when the scope changes. For contractors, that is the difference between a number you can explain and a number you have to reconstruct later.</p>
+    <p>QuoteCraft turns DFC's estimating standards and template library into a new, standalone workbook other contractors can adapt. It packages the estimating structure behind our quoting process; the downloadable spreadsheet does not replace the detailed costing and scope review required for a DFC customer quote.</p>
+
+    <h2>1. Write the scope before you enter a price</h2>
+    <p>&ldquo;Paint two rooms&rdquo; leaves questions unanswered. Are you painting walls only? How many coats? Is ceiling or trim work included? What preparation is allowed for? Write the boundaries before you compare a price with another job.</p>
+    <p>In QuoteCraft, the Price Book gives you twenty editable starter prices across twelve trade groups. Each code has a defined unit and scope. A package price is for that package, not a square-foot rate you can apply to any room. Review the assumptions, adapt the rates to your market, and put project-specific qualifications and exclusions on the Estimate sheet.</p>
+
+    <h2>2. Keep quantity, time and nonlabor assumptions visible</h2>
+    <p>The Estimate sheet has sixteen lines. Choose a scope code, enter the quantity, and review the estimated person-days and nonlabor amount for that unit. One person-day means one person working eight hours. The amber cells identify inputs; the linked formulas carry the calculation through to the quote.</p>
+    <p>The workbook compares the starter selling price with a selling floor: estimated person-days multiplied by the daily floor, plus nonlabor. It uses the higher amount as the unit rate. The daily floor starts at $800 per person-day and is editable. That is a selling-floor input, not an employee wage or a promise of profit. Check your actual costs and required margin separately.</p>
+    <div class="callout">
+      <p><strong>A simple example, using made-up inputs:</strong> a $900 starter price, one person-day at an $800 floor, and $150 in nonlabor produce a $950 applied rate. Two units total $1,900 before tax. The $150 is already included in that rate; do not add it again.</p>
+    </div>
+    <p>Some add-ons need you to enter their time and nonlabor assumptions. If an active row shows an input error, resolve the missing or invalid entry before using the total. A blank assumption should not quietly become free work.</p>
+
+    <h2>3. Give the client a clear quote</h2>
+    <p>The Quote sheet pulls the estimate into a printable client view, including your qualifications and exclusions. Review the job details, quantities, scope and totals before exporting it. The spreadsheet can carry the numbers; you still need to confirm that the written scope describes the work you intend to deliver.</p>
+    <p>The tax input defaults to zero and applies the selected rate to the entire subtotal. If your estimate mixes taxable and exempt work, handle that calculation separately rather than treating one rate as a complete answer.</p>
+
+    <h2>4. Plan payments against the work</h2>
+    <p>The Payments sheet calculates a deposit, progress draws and the remaining balance from the estimate. Edit the milestones, dates and percentages for the project, then check that the final balance reconciles. Record payments manually as they arrive.</p>
+    <p>The starting percentages are planning defaults to review for your agreement. A worksheet does not establish the terms of your contract or confirm that materials have been ordered.</p>
+
+    <h2>5. Keep changes separate from the original estimate</h2>
+    <p>When a client adds work or removes an item, use the Change Order sheet to price the addition or credit, note the schedule impact, and record approval. Save an approved copy of each change. The revised amount does not overwrite the original estimate or automatically revise its payment schedule, so review the remaining payments after a change is agreed.</p>
+
+    <h2>Start with one job you already understand</h2>
+    <p>Before using a new estimating tool on a live proposal, save a fresh copy and work through a familiar scope. Check the units, replace starter assumptions with your own, and compare the output with a manual calculation. Keep an untouched template so you can start clean on the next project.</p>
+    <p>The QuoteCraft download is an XLSX file with five connected sheets: Price Book, Estimate, Quote, Payments and Change Order. It uses ordinary formulas without macros. Use it in Excel or Numbers, or import it into Google Sheets; review dropdowns and print settings after import.</p>
+    <div class="callout">
+      <p><strong>Want the workbook?</strong> <a href="https://bidright-pro.vercel.app/store/estimate-workbook">Get the QuoteCraft Estimate Workbook for $29</a>. It is a one-time download from DFC Home Improvement LLC, with no subscription. Review the product details, then adapt the starter rates and scope to your own jobs.</p>
+    </div>
+""",
+    },
     {
         "slug": "winter-interior-remodel-projects",
         "tag": "Planning",
