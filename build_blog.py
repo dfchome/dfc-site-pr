@@ -8,7 +8,7 @@ trailing slashes under Caddy's try_files).
 """
 import html, json, os
 
-ROOT = "/Users/hugohernandez/Documentos/DFC/website/dfc-site"
+ROOT = os.environ.get("DFC_SITE_ROOT", "/Users/hugohernandez/Documentos/DFC/website/dfc-site")
 SITE = "https://www.dfchomeimprovement.com"
 PHONE_DISP = "(703) 596-8375"
 PHONE_TEL = "+17035968375"
@@ -216,6 +216,43 @@ FOOTER = f"""<footer class="site-footer">
 
 # ---------------------------------------------------------------- ARTICLES
 ARTICLES = [
+    {
+        "slug": "how-to-read-a-remodeling-quote",
+        "tag": "Hiring",
+        "title": "How to Read a Remodeling Quote: The Five Lines That Tell You Whether a Bid Is Honest",
+        "card_title": "How to read a remodeling quote, and the free guide we wrote about it",
+        "desc": "What a good remodeling quote has to show you, the five places a bad bid hides its gaps, and a free ebook from DFC Home Improvement on reading quotes before you sign.",
+        "card_desc": "The five lines that separate an honest quote from a cheap one, plus our free ebook, The Honest Quote.",
+        "hero": "/assets/img/kitchen-thomas-jefferson.jpg",
+        "hero_alt": "White kitchen with a farmhouse sink and brass hardware remodeled by DFC Home Improvement",
+        "date": "2026-10-19",
+        "date_disp": "October 2026",
+        "body": """
+    <p>Most homeowners compare quotes by the number at the bottom. That is the one line a contractor can make say anything. The lines above it are where you find out whether two bids are even for the same project, and whether the lower one will still be lower when the work is done.</p>
+
+    <h2>The five lines to read first</h2>
+    <ol>
+      <li><strong>Scope, written as what is included and what is not.</strong> "Bathroom remodel" is not a scope. "Remove and replace tub with a 60-inch shower base and wall kit, new valve, new drain, tile floor, existing window stays" is. If the exclusions are not written, assume they are not included.</li>
+      <li><strong>Allowances, with a number.</strong> Tile, fixtures, cabinets and counters are often priced as an allowance. A $4 per square foot tile allowance and a $12 one are two different bathrooms. Ask what the allowance buys at a real store.</li>
+      <li><strong>Permits and inspections, by name.</strong> Moving plumbing, electrical or a wall in Fairfax, Loudoun or Arlington County means a permit. A quote that does not mention it is either skipping it or planning to bill it later.</li>
+      <li><strong>The payment schedule.</strong> A deposit, then draws tied to milestones you can see: demo done, rough-in inspected, tile set. Large payments ahead of work are the most common complaint we hear from people who call us after another contractor.</li>
+      <li><strong>Change orders.</strong> Every project has one. The quote should say how a change is priced and approved, in writing, before the work happens.</li>
+    </ol>
+
+    <h2>Where a cheap bid hides the difference</h2>
+    <p>It is rarely in the labor rate. It is in a missing exclusion (haul-away, drywall patching, paint), an allowance set below what you would actually choose, a permit left out, or a line that says "as needed." When two bids are more than 20 percent apart, the gap is almost always one of those four, and you can find it in ten minutes with the quotes side by side.</p>
+
+    <h2>We wrote the guide, and it is free</h2>
+    <p>Over the years we have answered the same questions enough times that we put them in a short book: <em>The Honest Quote</em>, eleven chapters on how a residential quote is built, what each line should say, and the questions to ask before you sign anything, with anyone. It is free to download, no email required, in PDF and EPUB.</p>
+    <p>If you are earlier than that, still deciding what you can afford, the <em>Project Cost Planner</em> on the same page walks a wish list into a budget with room for the unknowns.</p>
+
+    <div class="callout">
+      <p><strong>Download The Honest Quote free</strong> at <a href="https://bidright-pro.vercel.app/store">our downloads page</a>. And if you want a quote you can read this way, <a href="/contact.html">send us a few photos and what you want the space to do better</a>.</p>
+    </div>
+
+    <p class="article-sources">Permit requirements vary by county and by the scope of work; the county building department confirms them for a specific project. Allowance examples are illustrative; actual selections set the number.</p>
+""",
+    },
     {
         "slug": "winter-interior-remodel-projects",
         "tag": "Planning",
